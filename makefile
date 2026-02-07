@@ -1,11 +1,12 @@
 CC = gcc
-CFLAGS = -Wall
 
 all: main
 
 main: main.c
-	run main.c 
-	rm -f main
+	$(CC) main.c -o bin/main
+	./bin/main 
+run:
+	./bin/main
 
 clean:
-	rm -f main
+	rm -f bin/main
