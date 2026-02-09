@@ -24,9 +24,7 @@ struct editorConfig
 
 struct editorConfig E;
 
-
-
-/*** terminal ***/
+/** terminal ***/
 void die(const char *s){
     write(STDOUT_FILENO, "\x1b[2J", 4);
     write(STDOUT_FILENO, "\x1b[H", 3);
@@ -220,3 +218,4 @@ int main(){
     }
     return 0 ;
 }
+
