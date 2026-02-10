@@ -9,7 +9,6 @@
 #include <errno.h>
 #include <sys/ioctl.h>
 
-
 /** defines ***/
 #define BREIF_VERSON "0.0.1"
 #define CTRL_KEY(k) ((k) & 0x1f)
@@ -17,6 +16,8 @@
 /*** data ***/
 struct editorConfig
 {  
+    int cx;
+    int cy;
     int screenrows;
     int screencols;
     struct termios orig_terminos;
@@ -121,14 +122,20 @@ void editorDrawRows(struct abuf *ab){
 }
 
 void editorRefreshScreen(){
+    
     struct abuf ab = ABUF_INIT;
     
     abAppend(&ab, "\x1b[?25l", 6);
     abAppend(&ab, "\x1b[H", 3);
-
+    
     editorDrawRows(&ab);
+        
+    char buf[32];
 
-    abAppend(&ab, "\x1b[H", 3);
+    snprintf(buf, sizeof(buf),"\x1b[%d;%dH",E.cx+1,E.cy+1);
+    abAppend(&ab,buf,strlen(buf));
+
+
     abAppend(&ab, "\x1b[?25h", 6);
 
     write(STDOUT_FILENO, ab.b, ab.len);
@@ -186,6 +193,28 @@ int getWindowSize(int *rows, int *cols){
 
 /** input **/
 
+void editorMoveCursor(char key){
+    
+  switch(key){
+    
+    case 'h':
+      E.cx--;
+    break;
+    case 'j':
+      E.cy++;
+    break;
+    case 'k':
+      E.cy--;
+    break;
+    case 'l':
+      E.cx++;
+    break;
+
+  }
+
+}
+
+
 void editorProcessKeypress(){
     char c =editorReadKey();
 
@@ -196,13 +225,25 @@ void editorProcessKeypress(){
             write(STDOUT_FILENO,"\x1b[H",3);
             exit(0);
         break;
+
+        case 'h':
+        case 'j':
+        case 'k':
+        case 'l':
+          editorMoveCursor(c);
+        break;
+
     }
+    
+
 
 }
 
 /** init ***/
 
 void initEditor(){
+    E.cx=0;
+    E.cy=0;
     if (getWindowSize(&E.screenrows,&E.screencols)== -1) die("getWindowSize");
 }
 
