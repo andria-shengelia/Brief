@@ -1,24 +1,28 @@
-# Breif Editor
+# Brief Editor
 
 A minimal text editor implemented in C for terminal environments.
 
 ## Current State
 
-Version 0.0.1 - Early development stage
+Version 0.0.2 - Core editing features implemented
 
 ### Features
 
 - Terminal-based interface with raw mode input handling
 - Window size detection and responsive rendering
-- Keyboard input processing
+- Full keyboard input processing with character insertion
 - Clean screen management with ANSI escape sequences
+- Status bar showing file info and modification state
+- File I/O with load and save functionality
 
 ### Current Functionality
 
-- Display welcome screen with editor version
+- **Edit text**: Insert and delete characters in real-time
+- **Navigate**: Arrow keys, vim keys (hjkl), Home/End, Page Up/Down
+- **File operations**: Load files on startup, save with Ctrl+S
+- **Visual feedback**: Status bar with character count and modified indicator
+- **Tabs**: Tab key inserts spaces for proper indentation
 - Exit via Ctrl+Q
-- Automatic screen refresh
-- Terminal window resizing support
 
 ## Building
 
@@ -26,7 +30,7 @@ Version 0.0.1 - Early development stage
 make
 ```
 
-This will compile main.c and run the editor automatically.
+This will compile main.c and create the executable.
 
 ## Running
 
@@ -37,11 +41,21 @@ make run
 Or directly:
 
 ```bash
-./bin/main
+./bin/main [filename]
 ```
+
+Pass a filename to open an existing file, or start with a blank buffer if no file is specified.
 
 ## Usage
 
+- **Character keys**: Type to insert text
+- **Backspace**: Delete character before cursor
+- **Delete key**: Remove character at cursor
+- **Arrow keys** or **hjkl**: Move cursor left/right/up/down
+- **Home/End**: Jump to line start/end
+- **Page Up/Down**: Scroll full page
+- **Tab**: Insert spaces for indentation
+- **Ctrl+S**: Save file (requires filename)
 - **Ctrl+Q**: Exit the editor
 
 ## Project Structure
@@ -58,22 +72,28 @@ Or directly:
 ## Implementation Details
 
 - **Raw Mode**: Terminal operates in raw mode for direct key input handling
-- **Buffer Management**: Uses dynamic buffer for efficient output rendering
+- **Dynamic Buffers**: Uses dynamic memory for text and output rendering
 - **ANSI Control**: Implements ANSI escape sequences for cursor and screen control
-- **Window Management**: Detects terminal dimensions and handles resize events
+- **Window Management**: Detects terminal dimensions and adapts UI
+- **Status Bar**: Inverted video bar showing filename, character count, and modification state
+- **File I/O**: Uses standard FILE operations for reading and writing
 
 ## Known Limitations
 
-- No file I/O functionality
-- No text editing or cursor movement
+- Single line only (no line wrapping or multi-line support)
+- No search/find functionality
+- No undo/redo
 - No syntax highlighting
-- Single input handler (Ctrl+Q only)
+- Tab behavior inserts spaces rather than actual tabs
+- Limited to screen width display
 
 ## Future Development
 
-- File reading and writing
-- Text buffer and editing capabilities
-- Cursor positioning and movement
-- More keyboard shortcuts
-- Line numbering
-- Syntax highlighting support
+- Multi-line text buffer with line wrapping
+- Proper newline handling for multiple rows
+- Search and replace functionality
+- Undo/redo support
+- Syntax highlighting
+- Copy/paste integration
+- Line numbers and scrolling
+- Configuration file support
